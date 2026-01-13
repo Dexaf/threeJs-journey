@@ -1,0 +1,5 @@
+per poter creare scritte in 3d ci servono i typeface.json di un font, 
+questi sono convertibili online.
+
+possiamo usare le misure di bounding (inscatolamento di un oggetto) per ricentrare il centro di una geometria.
+per usare il bounding dobbiamo farlo calcolare con computeBoundingBox (o sphere)

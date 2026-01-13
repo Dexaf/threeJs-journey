@@ -1,0 +1,17 @@
+i materiali sono shader pre confezionati.
+threejs ne ha diversi e han diverse proprieta', ad esempio quello standard ha il color,
+le varie map, opacity, transaparent, side e altro ancora.
+
+NOTA: quando importiamo modelli da blender e' facile che essi abbiano i side messi a double (vedi da entrambi i versi ma pesano di piu)
+
+alcune proprieta' sono comuni a diversi materiali.
+
+elenco materiali visti:
+    -standard (applica lo standard PBR: metal, rough, occlusion, height, albedo, reagisce alla luce ecc...)
+    -physical (come standard ma con piu proprieta)
+    -normal (visualizza le normali con i colori rgb, molto cool)
+    -matcap (usa l'immagine di una sfera per simulare il riflesso di un materiale)
+    -depth (renderizza colori in base alla distanza dalla camera)
+    -lambert (materiale per la gestione della luce a mo di riflesso)
+    -phong (materiale per la gestione della luce a mo di riflesso)
+    -toon (zelda wind waker, performa bene)

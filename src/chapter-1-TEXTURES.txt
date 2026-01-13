@@ -1,0 +1,18 @@
+ci sono diversi tipi di texture:
+    -albedo:        colore applicato sulla forma 3d
+    -height map:    displacement della forma 3d per creare altezze e profondita (servono vertici sufficenti per avere un risultato decente)
+    -alpha:         mappa delle trasparenze, usa la scala di grigio per andare da trasparente (0, nero) a pieno (1, bianco)
+    -occlusion:     fornisce una texture di finte ombre, funziona come per l'alpha ma al contrario (piu tende al nero piu saranno presenti ombre disegnate)
+    -metalness:     fornisce una mappa dei punti metallici della texture, verranno disegnati diversamente e piu lucenti e riflettenti
+    -roughness:     fornisce una mappa della ruvidita di una superfice, i punti ruvidi riflettono meno o zero luce
+    
+le texture sono manovrabili so molti livelli una volta caricate, possiamo scalarle, fare offset, ruotarle, cambiarne il centro
+e tanto altro.
+
+NOTE: le mip map sdoppiano il peso delle texture nella GPU
+NOTE: lavora sempre in potenze di 2 per le grandezze della texture
+NOTE: le normal dovrebbero essere sempre in png per una questione di accuratezza
+
+TECNICHE:   infilando dentro un immagine dei disegni fatti con un singolo colore (rosso, verde e blu),
+            possiamo usare una singola immagine, estrarre i canali dei singoli colori e avere piu' utility
+            come creare ombre, disegni e controni.
