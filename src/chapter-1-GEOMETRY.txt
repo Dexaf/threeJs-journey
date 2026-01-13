@@ -1,0 +1,1 @@
+BufferGeometry:     classe base di tutte le geometrie (box, sphere ecc...)

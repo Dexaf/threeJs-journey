@@ -1,0 +1,9 @@
+StereoCamera:       camera usata per copiare le coppie di occhi (vr e cose cosi)
+OrtographicCamera:  camera che non tiene conto della profondita, per renderizzare
+                    usa le direzioni come distanza laterale di rendering.
+                    per mantenere la forma originale di cio' che viene renderizzato
+                    dobbiamo moltiplicare le distanze laterali per l'aspect ratio del 
+                    contenitore.
+TransformControls:  muove gli oggetti in una griglia con il mouse.
+DragControls:       muove gli oggetti a mo di drag n drop con il mouse.
+OrbitControls:      puoi muovere la camera con un centro focale.
