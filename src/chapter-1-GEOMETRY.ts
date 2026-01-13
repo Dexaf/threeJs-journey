@@ -64,7 +64,7 @@ if (sceneHtmlCanvas) {
 
     //RENDERING
     //NOTE: function to handle animations
-    const runAnimations = (deltaTime: number) => {
+    const runAnimations = (_: number) => {
     }
 
     //i dispositivi han diversi pixel ratio, variano da 1 a piu di 3

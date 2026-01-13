@@ -37,11 +37,11 @@ if (sceneHtmlCanvas) {
     albedo.magFilter = THREE.NearestFilter;
 
     const alpha = textureLoader.load("/assets/textures/door/alpha.jpg");
-    const heightMap = textureLoader.load("/assets/textures/door/height-map.jpg");
-    const metalness = textureLoader.load("/assets/textures/door/metalness.jpg");
-    const normal = textureLoader.load("/assets/textures/door/normal.jpg");
-    const occlusion = textureLoader.load("/assets/textures/door/occlusion.jpg");
-    const roughness = textureLoader.load("/assets/textures/door/roughness.jpg");
+    // const heightMap = textureLoader.load("/assets/textures/door/height-map.jpg");
+    // const metalness = textureLoader.load("/assets/textures/door/metalness.jpg");
+    // const normal = textureLoader.load("/assets/textures/door/normal.jpg");
+    // const occlusion = textureLoader.load("/assets/textures/door/occlusion.jpg");
+    // const roughness = textureLoader.load("/assets/textures/door/roughness.jpg");
 
     //SCENE
     const scene = new THREE.Scene();
