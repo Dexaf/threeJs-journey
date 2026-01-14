@@ -10,13 +10,21 @@ if (sceneHtmlCanvas) {
     const scene = new THREE.Scene();
 
     //LIGHTS
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(ambientLight);
-    const pointLight = new THREE.PointLight(0xffffff, 7);
-    scene.add(pointLight);
-    pointLight.position.set(0, 1, 0);
-    const ambientLightHelper = new THREE.PointLightHelper(pointLight);
-    scene.add(ambientLightHelper);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    scene.add(directionalLight);
+    directionalLight.position.set(0, 2, 0);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.bias = -0.1;
+    directionalLight.shadow.radius = 5;
+    const cameraSize = 2.6;
+    directionalLight.shadow.camera.left = -cameraSize;
+    directionalLight.shadow.camera.right = cameraSize;
+    directionalLight.shadow.camera.top = cameraSize;
+    directionalLight.shadow.camera.bottom = -cameraSize;
+    directionalLight.shadow.camera.far = 4;
+    directionalLight.shadow.mapSize.set(512, 512);
 
     //MATERIAL - ASPETTO
     const material = new THREE.MeshStandardMaterial();
@@ -26,6 +34,12 @@ if (sceneHtmlCanvas) {
     const mesh2 = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.2), material);
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(7, 7), material);
     plane.material.side = THREE.DoubleSide;
+
+    //shadows
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    mesh1.castShadow = true; mesh1.receiveShadow = true;
+    mesh2.castShadow = true; mesh2.receiveShadow = true;
+    plane.receiveShadow = true;
 
     //Position
     mesh.position.set(1.7, 0, 0);
@@ -56,6 +70,8 @@ if (sceneHtmlCanvas) {
     })
     renderer.setSize(sceneHtmlCanvas.clientWidth, sceneHtmlCanvas.clientHeight);
     renderer.render(scene, camera);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = 3;
 
     //RESIZING CANVAS AND CAMERA
     window.addEventListener('resize', () => {

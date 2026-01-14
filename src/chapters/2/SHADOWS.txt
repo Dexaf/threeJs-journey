@@ -1,0 +1,32 @@
+le ombre base degli oggetti sono chiamate core, le ombre a terra sono chiamate "drop", queste sono pesanti
+per il rendering real time.
+
+per ogni luce aggiunta abbiamo un render aggiuntivo!!! dentro questi rendere, threejs usa il depth material
+per capire come gestire le luci e mette le ombre create dentro una shadow map (texture che disegna ombre in tempo reale).
+meno ombre devono disegnare e meno queste sono definite piu il processo si alleggerisce.
+le ombre generate sono inscritte in base a cosa e' visibile dalla camera, se la camera non ne dovrebbe vedere, queste non vengono disegnate.
+
+per avere ombre dobbiamo:
+    - attivare la shadow map nel renderer
+    - definire quali oggetti castano ombre e/o le ricevono
+    - attivare il casting di ombre dalle luci
+
+di ogni shadow di una luce possiamo controllare diversi parametri, 
+tra cui la camera (dove campiona l'ombra),
+il bias (boh, roba di qualita), 
+radius (blur dell'ombra disegnata) 
+shadow map (la grandezza della texture dove viene disegnata l'ombra, piu e' grande
+migliore e' la qualita, ovviamente inficia sulla qualita')e altro.
+
+ci sono diversi tipi di shadow map usabili, ognuna ha le sue perks e necessita di un setup diverso.   
+    - BasicShadowMap: Very performant but lousy quality
+    - PCFShadowMap: Less performant but smoother edges
+    - PCFSoftShadowMap: Less performant but even softer edges
+    - VSMShadowMap: Less performant, more constraints, can have unexpected results
+
+
+per usare le ombre bakate dobbiamo caricare la texture, e metterla come map di dove vogliamo 
+sia inserita.
+possiamo anche usare altre tecniche come allacciare una ombra piccola sotto i nostri oggetti 3d
+tramite logica di codice e spostare la bake insieme all'oggetto, cosi sembra un ombra dinamica 
+(metti un piano piccolo in alpha al livello dei piedi dell'oggetto e inserisci l'ombra come alphamap)

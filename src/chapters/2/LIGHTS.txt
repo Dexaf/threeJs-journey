@@ -1,0 +1,18 @@
+    -la luce ambientale illumina in modo uguale lungo tutte le normali degli oggetti e non produce ombre
+    -la luce a punto invece illumina ad area intorno a se puntando dal suo centro verso fuori
+    -la luce direzionale e' una luce globale che punta in una direzione, l'orientamento di questa e' un po particolare 
+    in quanto va spostata fisicamente e puntata verso un determinato bersaglio (di default punta a 0,0,0 ed e' poisizionata perpendicolara)
+    -hemisphere light e' una luce che illumina diversamente dal basso che dall'alto simulando il rimbalzo della luce del cielo alla terra.
+    -luce ad area rettangolare, imita una lampada quadrata, e' un piano che spara luce in una direzione e non produce ombre
+    -spot light, luce tonda direzionata, a contrario della direzionale ha una distanza limitata
+
+le luci sono pesanti e mangiano molta performance:
+    -costo basso: ambient, hemisphere
+    -costo medio: directional, point
+    -costo alto: spot (uno sfracello), rectArea
+
+per abbattere i costi possiamo fare il baking delle luci, praticamente pre registriamo luci e ombre create in una texture, poi la stampiamo
+insieme alle texture finale, questa tecnica salva molta computazione al costo di pesare sulla texture finale.
+le ombre create cosi, ovviamente, non possono muoversi e dunque han senso solo su oggetti fermi.
+
+le luci hanno degli helpers che aiutano nella visualizzazione

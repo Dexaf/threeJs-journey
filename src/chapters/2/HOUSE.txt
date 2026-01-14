@@ -1,0 +1,11 @@
+in quesot progetto creiamo una casa abbandonata in un campo di tombe, giocando 
+con texture e luci.
+
+fino ad ora abbiamo visto come fare uno spread circolare e casuale
+di oggetti con sin e cos, cosa e' una arm texture 
+(texture che racchiude occlusione, roughness e metalness in una texture sola).
+
+abbiamo anche visto come gestire le ripetizione delle texture (ecitare stretch ai lati e 
+ripetere il patterne in scala), 
+come gestire mappe d'altezza grigiastre (andando il displacement con il colore da bianco a nero, 
+grigio alza tutto, possiamo impostare un bias minimo di ignoramento per evitare che si alzi tutto mediamente)
