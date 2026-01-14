@@ -1,5 +1,5 @@
 import { HDRLoader, OrbitControls } from 'three/examples/jsm/Addons.js';
-import './style.css'
+import '../../style.css'
 import * as THREE from 'three'
 
 //SCENE HTML CANVAS
