@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host"
+    "dev": "vite --host",
+    "create:chapter": "node ./scripts/create-chapter.ts"
   },
   "devDependencies": {
     "@types/gsap": "^1.20.2",
+    "@types/node": "^25.0.8",
     "@types/three": "^0.182.0",
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
