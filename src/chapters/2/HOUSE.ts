@@ -1,4 +1,4 @@
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls, Sky } from 'three/examples/jsm/Addons.js';
 import '../../style.css'
 import * as THREE from 'three'
 import { door } from './HOUSE-MESHES/door';
@@ -28,15 +28,15 @@ if (sceneHtmlCanvas) {
     const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2);
     const gravesGroup = new THREE.Group();
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 35; i++) {
         const grave = new THREE.Mesh(graveGeometry, graveMaterial);
 
         //POSITIONING
         const rndAnglePos = Math.random() * (Math.PI * 2);
-        const rndDistancePos = Math.random() * 6 + 3.85;
+        const rndDistancePos = Math.random() * 4 + 3.85;
         grave.position.set(
             rndDistancePos * Math.cos(rndAnglePos),
-            0.37,
+            0.2,
             rndDistancePos * Math.sin(rndAnglePos),
         )
 
@@ -68,7 +68,7 @@ if (sceneHtmlCanvas) {
     //HOUSE - DOOR
     door.castShadow = true;
     door.receiveShadow = true;
-    door.position.y = 1;
+    door.position.y = 0.9;
     door.position.z = 2.05;
 
     //HOUSE - BUSH
@@ -107,15 +107,33 @@ if (sceneHtmlCanvas) {
     scene.add(houseGroup);
 
     //LIGHTS
-    const ambientLight = new THREE.AmbientLight(0x86cdff, 0.35);
+    const hemisphereLight = new THREE.HemisphereLight(0xffaaaa, 0x86cdff, 1);
     const directionalLight = new THREE.DirectionalLight(0x86cdff, 1);
     directionalLight.position.set(-20, 5, -20);
     directionalLight.castShadow = true;
-    directionalLight.shadow.radius = 5;
+    directionalLight.shadow.radius = 3;
     directionalLight.shadow.camera.far = 50
     directionalLight.shadow.camera.left = -12
     directionalLight.shadow.camera.right = 12
-    scene.add(ambientLight, directionalLight,);
+    directionalLight.shadow.mapSize.set(256, 256);
+    const pointLight = new THREE.PointLight(0xff0000, 0.1);
+    pointLight.position.set(door.position.x + 0.4, door.position.y, door.position.z + 0.1);
+    scene.add(hemisphereLight, directionalLight, pointLight);
+
+    //SKY
+    //e' un addon per un oggetto (cubo) con shader che simula una skybox
+    //questa mesh e' uno shader material
+    const sky = new Sky();
+    sky.scale.set(100, 100, 100)
+    sky.material.uniforms['turbidity'].value = 50
+    sky.material.uniforms['rayleigh'].value = 3
+    sky.material.uniforms['mieCoefficient'].value = 0.1
+    sky.material.uniforms['mieDirectionalG'].value = 0.95
+    sky.material.uniforms['sunPosition'].value.set(-1, -0.038, -1)
+    scene.add(sky);
+
+    //FOG
+    scene.fog = new THREE.FogExp2('#04343f', 0.05)
 
     //CAMERA
     const wrapperAspectRatio = sceneHtmlCanvas.clientWidth / sceneHtmlCanvas.clientHeight;

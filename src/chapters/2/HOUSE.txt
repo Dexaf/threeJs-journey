@@ -9,3 +9,11 @@ abbiamo anche visto come gestire le ripetizione delle texture (ecitare stretch a
 ripetere il patterne in scala), 
 come gestire mappe d'altezza grigiastre (andando il displacement con il colore da bianco a nero, 
 grigio alza tutto, possiamo impostare un bias minimo di ignoramento per evitare che si alzi tutto mediamente)
+
+possiamo accedere ai membri di un gruppo con un for each o un traverse.
+
+possiamo creare la nebbia con fog o fogexp, basta poi assegnarla alla proprieta' fog della scena.
+
+RICORDATI SEMPRE DI OTTIMIZZARE LE TEXTURE PER DIO.
+jpg is good ma webp sembra andare meglio a livello di compressione,
+per le texture data (tipo mappe ecc) sarebbe meglio evitare compressioni, quanto possibile.
