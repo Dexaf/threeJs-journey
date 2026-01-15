@@ -1,0 +1,7 @@
+usabili per fumo, acqua, stelle e fuoco...
+
+per disegnare le particello, creiamo dei vertici (buffer geometry + buffer attribute) e gli assegnamo un materiale.
+per gestire eventi sulle singole particelle ci serve lavorare con gli attributi dello shader.
+
+possiamo modificare aspetto e colore delle particelle usando gli attributi della geometria ma questo processo e' pesante,
+sarebbe opportuno usare uno shader custom per fare queste cose

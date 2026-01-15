@@ -1,12 +1,12 @@
 import { OrbitControls, Sky } from 'three/examples/jsm/Addons.js';
 import '../../style.css'
 import * as THREE from 'three'
-import { door } from './HOUSE-MESHES/door';
-import { terrain } from './HOUSE-MESHES/terrain';
-import { walls } from './HOUSE-MESHES/walls';
-import { bushMaterial } from './HOUSE-MESHES/bush-material';
-import { roof } from './HOUSE-MESHES/roof';
-import { graveMaterial } from './HOUSE-MESHES/grave-material';
+import { door } from './HOUSE-OBJECTS/door';
+import { terrain } from './HOUSE-OBJECTS/terrain';
+import { walls } from './HOUSE-OBJECTS/walls';
+import { bushMaterial } from './HOUSE-OBJECTS/bush-material';
+import { roof } from './HOUSE-OBJECTS/roof';
+import { graveMaterial } from './HOUSE-OBJECTS/grave-material';
 
 //SCENE HTML CANVAS
 const sceneHtmlCanvas = document.getElementById("three-scene-canvas") as HTMLCanvasElement;
