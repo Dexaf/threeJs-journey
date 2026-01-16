@@ -1,0 +1,8 @@
+in questo progetto impariamo come liberare la memoria da un'oggetto 3d:
+    - chiamiamo dispose per eliminare la geometria
+    - chiamiamo dispose per eliminare il materiale
+    - rimuoviamo la mesh di riferimento dalla scena
+
+abbiamo usato anche GUI, un addons che permette di modificare con degli scroll, delle proprieta.
+quando lanciamo un aggiornamento dobbiamo anche aggiornare le proprieta relative, questo a volte 
+puo significare ricreare l'oggetto, se dinamico.

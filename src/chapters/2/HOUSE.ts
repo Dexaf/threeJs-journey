@@ -179,6 +179,7 @@ if (sceneHtmlCanvas) {
     const timeBetweenFrames = 1000 / fps;
     const animate = () => {
         timer.update();
+        orbitControls.update();
 
         const currentTime = timer.getElapsed() * 1000;
 

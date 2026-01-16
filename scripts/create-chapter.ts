@@ -121,6 +121,7 @@ if (sceneHtmlCanvas) {
     const timeBetweenFrames = 1000 / fps;
     const animate = () => {
         timer.update();
+        controls.update();
         const currentTime = timer.getElapsed() * 1000;
 
         const timeSinceLastRender = currentTime - lastRenderTime;
