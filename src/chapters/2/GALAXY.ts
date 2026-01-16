@@ -26,7 +26,7 @@ if (sceneHtmlCanvas) {
     const parameters = {
         count: 20000,
         size: 0.02,
-        radius: 10,
+        radius: 6,
         branches: 5,
         spinForce: 1.25,
         scatterRatio: 1.5,
