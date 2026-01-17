@@ -6,3 +6,5 @@ in questo progetto impariamo come liberare la memoria da un'oggetto 3d:
 abbiamo usato anche GUI, un addons che permette di modificare con degli scroll, delle proprieta.
 quando lanciamo un aggiornamento dobbiamo anche aggiornare le proprieta relative, questo a volte 
 puo significare ricreare l'oggetto, se dinamico.
+
+evviva le particelle, la matematica e la trigonometria.

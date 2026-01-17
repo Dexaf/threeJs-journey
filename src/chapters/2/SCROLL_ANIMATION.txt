@@ -1,0 +1,5 @@
+possiamo mettere la scena renderizzata come sfondo fisso con del css,
+e se serve rendere lo sfondo trasparente (o di un colore a scelta).
+
+ricordate che le texture dove ci serve avere un valore di dato e non semplice colore, 
+e' opportuno mettere il filtro a nearest.
