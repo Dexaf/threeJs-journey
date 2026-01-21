@@ -1,0 +1,59 @@
+l'idea dietro la fisica in una simulazione 2d/3d e' quella di avere 
+un parallelo del nostro mondo renderizzato, che si occupa di calcolare 
+la fisica e poi usare i dati generati per aggiornare la nostra simulazione.
+
+ci sono diverse librerie che si occupano della fisica per noi, alcune
+vanno dal 3d al 2d altre sono specializzate in una delle due.
+
+esempi di librerie a fisiche 3d:
+    -ammo.js    (piu' usata)
+    -cannon.js  (piu' facile)
+    -oimo.js
+
+esempi di librerie a fisica 2d:
+    -matters.js
+    -p2.js
+    -planck.js
+    -box2d.js
+
+CANNON
+per usare cannon js inziamo creando il mondo della simulazione, al mondo
+possiamo aggiungere (e gestire come preferiamo) la gravita.
+per mettere in relazione una mesh con al mondo fisico simulato dobbiamo aggiungere
+un corpo.
+al corpo possiamo dare posizione, massa, forma ecc...
+
+per poter sincronizzare la posizione simulata con quella renderizzata.
+
+canon usa solo i quaternion per ruotare i corpi.
+
+i corpi han reazioni tra loro, una sfera che cade rimbalza e cosi via...
+per poter gestire queste reazioni usiamo i materiali e i materiali di contatto.
+creiamo due materiali e con il materiale da contatto gestiamo, la loro reazione a contatto.
+aggiungiamo al mondo il materiale da contatto e assegnamo ai nostri oggetti i loro materiali.
+
+muovere i corpi fisicamente
+    possiamo spostare gli oggetti fisici applicando forze (spinte, vento ecc...),
+    applicando impulsi (aumentando direttamente la velocita) [sia globale che locale].
+
+ottimizzare la fisica
+    testa le collisioni solo in zone dove le collisioni sono possibili, oggetti a 10 metri di distanza sicuramente 
+    non collideranno nello stesso frame.
+    cannon ci da delle opzioni diverse per eseguire queste ottimizzazioni 
+    (world.broadphase = SAPBBroadphase(world)).
+    possiamo "addormentare" un corpo per smettere di testarlo (magari a velocita molto basse)
+    (world.allowSleep).
+
+    possiamo inserire la fisica dentro un worker (thread apparte)
+
+possiamo ascoltare gli eventi di collisione dei corpi e reagire con eventi 
+(body.addEventListener('collide')).
+dentro gli eventi abbiamo i vari dati della collisione
+
+rimuovere dalla simulazione fisica
+    rimuoviamo gli eventi di collisione e poi rimuoviamo 
+    il corpo dal mondo (world.removeBody)
+
+cannon e' un po vecchio e poco aggiornato, lo han forkato con cannon-es.
+
+ammo.js e' piu usato ma piu complesso
