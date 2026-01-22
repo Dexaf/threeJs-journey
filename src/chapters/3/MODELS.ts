@@ -63,7 +63,7 @@ if (sceneHtmlCanvas) {
     const dLight = new THREE.DirectionalLight(0xffffff, 2);
     dLight.position.set(-2, 5, -5);
     dLight.castShadow = true;
-    dLight.shadow.bias = -0.1;
+    dLight.shadow.bias = -0.01;
     dLight.shadow.radius = 3;
     const cameraSize = 3;
     dLight.shadow.camera.left = -cameraSize;
