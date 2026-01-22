@@ -1,0 +1,56 @@
+formati popolari per il 3d
+    
+    -ojb
+    -fbx
+    -stl
+    -ply
+    -collada
+    -gltf
+
+il formato piu popolare e standard e' il gltf.
+questo formato supporta geometrie, materiali, luci, grafi,
+animazioni, scheletri e morph.
+
+non per questo e' il formato migliore, ad esempio, se ci servono 
+solo i vertici, il formato poly e' piu leggero.
+
+FORMATI
+gltf puo avere piu formati:
+    -binary (glb)
+    -draco
+    -embedded
+    -normale
+
+GLTF STANDARD
+un modello esportato in gltf porta con se piu di un file:
+    il gltf base che e' il nostro entry point
+    il bin che non ho idea di cosa fa
+    le varie mappe, tra cui ad esempio l'albedo della texture
+
+GLB
+un modello esportato in glb e' generalmente piu leggero, facile da gestire
+(c'e' solo un file) ma e' difficile da alterare in quanto "pezzo unico"
+
+DRACO
+i modelli draco sono come i gltf ma estremamente piu leggeri in quanto vengono compressi.
+draco non e' esclusivo ai gltf.
+
+questo tipo di file han bisogno di un loro decoder (DRACOLoader).
+il decoder della compressione e' disponibile in webassembly e puo' essere lanciato 
+via worker per rendere il load molto piu rapido.
+
+per fare questo possiamo usare il codice gia' disponibile dentro la cartella
+draco dentro three nei node modules 
+e caricarlo nel loader (dracoLoader.setDecoderPath('/workers/draco/')) 
+per poi passarlo al loader di gtlf (gltfLoader.setDRACOLoader(dracoLoader);)
+
+ovviamente tutto questo viene ad un costo, il decoding occupa tempo.
+
+EMBEDDED
+i modelli embedded sono json leggibili all-in-one come i glb
+
+
+ANIMAZIONI
+per gestire le animazioni possiamo usare il AnimationMixer, 
+una classe per gestire le animation clip.
+[possiamo usare un load manager anche qua]

@@ -41,9 +41,9 @@ if (sceneHtmlCanvas) {
     }
     world.addContactMaterial(CONCRETE_PLASTIC_contactPhysMaterial);
     const applyPhysics = (deltaTime: number) => {
-        let appliedForce = Y_INV_DIRECTION.clone();
-        appliedForce.y *= 2 * deltaTime;
-        sphereBody.applyLocalImpulse(appliedForce, NEUTRAL_DIRECTION);
+        // let appliedForce = Y_INV_DIRECTION.clone();
+        // appliedForce.y *= 2 * deltaTime;
+        // sphereBody.applyLocalImpulse(appliedForce, NEUTRAL_DIRECTION);
     }
 
     //!SECTION - PHYSICS
