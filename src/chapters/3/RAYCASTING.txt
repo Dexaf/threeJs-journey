@@ -1,0 +1,15 @@
+Il raycasting e' il modo che si usa per proiettare un raggio nello spazio 2d/3d che ha lo scopo di 
+mostrare intersezioni di vario tipo.
+possiamo usarla per simulare proiettili o click.
+
+un raycast e' composto da 3 elementi principali:
+
+    l'origine del raggio
+    la direzione
+    la distanza
+
+se il raycast colpisce un bersaglio (o piu se usiamo metodi per controllare hit multiple)
+riceviamo un risultato contenente chi ha colpito e dove piu altri dati.
+
+note:   se usiamo un raycast su un bersaglio che puo essere colpito piu di una volta con un cast solo
+        troviamo piu risultati nel cast
