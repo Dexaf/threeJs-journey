@@ -1,0 +1,28 @@
+le mappe di ambiente sono uno sfondo a 360 gradi che puo influenzare
+le luci e i riflessi di una scena.
+
+le mappe di ambiente si assegnano alla scena e ne possiamo controllare diverse proprieta
+come intensita, blur, rotazione e altro.
+
+nella scena possiamo controllare il bg (cosa viene visto) e la env (cosa viene riflesso).
+
+abbiamo visto due tipi principali di file, ldr e hdr, i primi li abbiamo caricati
+come cubo di immagini in png, il secondo come file hdr.
+l'ultimo dei due ha una qualita migliore ma e' piu pesante.
+
+possiamo crare env map a terra (al posto di essere fluttuanti come al solito) usando
+GroundedSkybox.
+
+possiamo avere env map dinamiche (na roba strana con cube render target), per farlo 
+usiamo WebGLCubeRenderTarget e una CubeMap:
+
+Il WebGLCubeRenderTarget è un contenitore in GPU che serve a memorizzare una cubemap, 
+    cioè sei immagini che rappresentano l’ambiente nelle sei direzioni dello spazio. 
+    La CubeCamera usa questo contenitore come destinazione: quando viene aggiornata, 
+    renderizza la scena sei volte, una per ogni direzione, e scrive il risultato dentro il CubeRenderTarget. 
+    Il risultato è una cubemap aggiornata dinamicamente che può essere usata come environment map. 
+    Quando questa texture viene assegnata a scene.environment, 
+    i materiali PBR la campionano automaticamente per calcolare le riflessioni.
+
+le camere possono vedere oggetti a layer, questo significa che possiamo 
+sistemare oggetti in un layer e fare in modo che la camera veda solo quelli.
