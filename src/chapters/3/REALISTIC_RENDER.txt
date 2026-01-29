@@ -1,0 +1,25 @@
+tone mapping:   conversione di valori gruppi di colori in approssimazioni hdr.
+                abbiamo diverse opzioni automatiche su threejs per impostare un tone 
+                mapping:
+
+                    NoToneMapping
+                    LinearToneMapping
+                    ReinhardToneMapping
+                    CineonToneMapping
+                    ACESFilmicToneMapping       
+
+anti aliasing:  effetto per prevenire l'aliasing, ovvero l'effetto a scaletta di 
+                righe diagonali, ombre e altro.
+                per correggere questo errore usiamo l'anti aliasing
+
+                soluzioni usate sono 
+                
+                    SSAA(super sampling) [pesante ma efficace]
+                    FSAA(fullscreen sampling)
+                    MSAA(multi sampling) 
+
+ricordati srgb solo nel albedo
+
+ombre:  un sacco di tweak che abbiamo gia visto ma in piu:
+            bias: evita che oggetti castino ombre su se stessi (superfici piatte)
+            normalBias: evita che oggetti castino ombre su se stessi (superfici tonde)
