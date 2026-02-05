@@ -1,0 +1,7 @@
+nelle ultime versioni possiamo esportare i colori degli shader allo spazio
+sRGB cosi 
+    #include <colorspace_fragment>
+dentro il drag shader.
+
+NOTE: lil gui caga la conversione dei colori, conviene fare un set manuale per 
+rendere la conversione corretta new THREE.Color().setRGB(0/255, 170/255, 255/255).
