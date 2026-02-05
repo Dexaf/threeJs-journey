@@ -1,0 +1,22 @@
+uno shader e' una serie di programmi mandati alla gpu per eseguire un render,
+e' diviso in piu pezzi ma noi possiamo controllarne solo alcuni:
+
+    Vertex shader:      shader che si occupa della posizione dei vertici
+    Fragment Shader:    shader che si occupa del colore/trasparenza di un frammento 
+                        (unita distinta dal pixel)
+
+combinando tutte le pipeline otteniamo un rendering di un oggetto.
+
+tutto cio' che vediamo lo vediamo perche' passa per uno shader.
+
+per usare shader custom dobbiamo usare RawShaderMaterial e passargli il
+vertex shader e fragment shader come parametri.
+
+i file degli shader sono di vario formato ma su threejs
+usiamo glsl.
+dentro questi file possiamo specificare la precisione dei float tra basso, medio e alto.
+
+possiamo passare allo shader degli input usando la keyword uniform, per passare poi dati dal 
+vertex shader al fragment shader dobbiamo usare la keyword varying e assegnargli un valore.
+
+NOTE: gli uniform possono essere assegnati al vertex ma vanno passati con varying al fragment.

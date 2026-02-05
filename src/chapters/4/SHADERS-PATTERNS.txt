@@ -1,0 +1,6 @@
+se usiamo shader material al posto di raw shader material abbiamo gia' disponibili le
+variabili di base (position, projection, uv ecc...).
+
+i pattern disegnati con gli shader in genere si basanmo sulle uv per decretare la posizione.
+
+NOTA: la funzione step e' figa per dividere valori tra 0 e 1.
