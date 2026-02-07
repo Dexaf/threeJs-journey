@@ -1,0 +1,9 @@
+open gl ha diversi parametri usabili dentro lo shader.
+questi parametri hanno dei nomi con prefissi come 'gl_'.
+
+in questo progettino usiamo gl_PointSize che definisce la grandezza dei punti di un modello 3d.
+
+reminder che esistono anche gli attributi.
+
+[tips utili, copia i pezzi di codice de three js dove servono.]
+[atan per trovare l'angolo rispeto al centro in un contesto trigonometrico]
