@@ -1,0 +1,17 @@
+Il fumo è realizzato con un PlaneGeometry ad alta suddivisione verticale, deformato e animato interamente via shader.
+Non viene usato un materiale PBR, ma uno ShaderMaterial custom, perché serve controllo totale su deformazione e trasparenza.
+
+Nel vertex shader il movimento del fumo è guidato da una texture di rumore perlinato:
+
+- le UV scorrono nel tempo per simulare la salita del fumo,
+- il valore del rumore viene usato per aggiungere spessore al piano lungo Z,
+- i vertici vengono spostati su X e Z in base all’altezza (uv.y) e al tempo, simulando l’effetto del vento.
+
+Nel fragment shader la stessa texture di Perlin controlla l’alpha:
+
+- il rumore viene sogliato con smoothstep per evitare trasparenze grigie,
+- l’alpha viene ridotta ai bordi del piano per far dissolvere il fumo senza mostrare i limiti della geometria.
+
+Il materiale è trasparente e con depthWrite: false per evitare auto-occlusioni.
+La stessa texture di rumore viene usata sia per la deformazione che per la trasparenza, mantenendo coerenza visiva.
+I parametri principali sono esposti come uniform e regolabili in tempo reale via GUI.

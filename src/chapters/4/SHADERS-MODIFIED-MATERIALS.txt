@@ -1,0 +1,15 @@
+In questo setup non abbiamo riscritto uno shader da zero, ma abbiamo modificato 
+un MeshStandardMaterial già esistente usando onBeforeCompile. 
+In questo modo manteniamo tutto il sistema PBR di Three.js (luci, env map, ombre, ecc.) 
+e interveniamo solo dove serve, aggiungendo uniform e modificando alcuni chunk del vertex shader.
+
+La deformazione della mesh avviene direttamente nel vertex shader, 
+ruotando i vertici sull’asse XZ in base alla posizione Y e al tempo. 
+Dal momento che la geometria cambia via shader, è stato necessario applicare la stessa trasformazione 
+anche alle normali, altrimenti l’illuminazione non avrebbe seguito correttamente la nuova forma.
+
+Inoltre, per far sì che le ombre combacino con la mesh deformata, 
+abbiamo dovuto creare un MeshDepthMaterial custom 
+e applicare la stessa logica di deformazione anche lì. 
+Senza questo passaggio, la mesh renderizzata e quella usata per le shadow map 
+sarebbero risultate diverse, causando ombre incoerenti.
