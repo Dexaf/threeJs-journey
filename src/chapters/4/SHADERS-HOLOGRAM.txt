@@ -1,0 +1,43 @@
+L’ologramma è realizzato applicando uno ShaderMaterial custom a un modello GLTF.
+Non viene usato un materiale fisico, perché l’effetto è interamente costruito via shader combinando trasparenza, fresnel, glitch e pattern animati.
+
+Il materiale è trasparente, double side, con depthWrite disattivato e additive blending.
+Questo permette di:
+
+    - vedere entrambe le facce del modello,
+    - evitare auto-occlusioni tra fronte e retro,
+    - sommare la luminosità nelle zone sovrapposte, tipico effetto olografico.
+
+Nel vertex shader viene introdotto l’effetto glitch.
+La posizione del vertice viene modificata prima della proiezione:
+
+    - il tempo è modulato da u_glitchSpeed,
+    - più funzioni seno combinate generano un segnale pseudo-casuale,
+    - il risultato viene sogliato con smoothstep,
+    - la forza finale è controllata da u_glitchStrength.
+
+Lo spostamento avviene su X e Z usando una funzione random basata sulla posizione,
+così il modello sembra vibrare e distorcersi in modo instabile lungo l’asse verticale.
+
+Nel fragment shader viene costruito l’effetto visivo principale dell’ologramma.
+
+Le linee orizzontali sono generate proceduralmente:
+
+    - si usa la posizione Y del frammento,
+    - il tempo scorre tramite u_stripesSpeedRatio,
+    - mod e pow creano un pattern ripetuto e non lineare,
+    - u_stripesNumber controlla la densità delle bande.
+
+Il fresnel è calcolato tramite dot tra direzione camera-frammento e normale.
+Questo produce:
+
+    - maggiore intensità sui bordi,
+    - minore intensità sulle superfici frontali.
+
+Il fresnel viene potenziato con una potenza e scalato da u_fresnelIntensity,
+poi moltiplicato per la trasparenza delle bande.
+
+Un falloff con smoothstep attenua i bordi estremi per evitare stacchi netti.
+
+Il colore finale è ciano fisso, mentre l’alpha è interamente guidato dalla combinazione di stripes e fresnel.
+L’effetto risultante è un oggetto semi-trasparente con linee animate, bordi luminosi e distorsioni instabili.

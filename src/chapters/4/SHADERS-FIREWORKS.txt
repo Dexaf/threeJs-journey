@@ -1,0 +1,35 @@
+I fuochi di artificio sono realizzati come sistemi di particelle basati su THREE.Points con ShaderMaterial custom.
+Ogni click genera un nuovo sistema indipendente che nasce, si anima e viene distrutto al termine dell’effetto.
+
+La geometria viene costruita manualmente con BufferGeometry.
+Le posizioni iniziali delle particelle sono distribuite su una sfera tramite coordinate sferiche casuali:
+
+    - theta e phi vengono generati per ottenere una distribuzione uniforme,
+    - il raggio è leggermente variato per evitare una forma troppo perfetta,
+    - ogni particella parte quindi da una direzione radiale rispetto al centro.
+
+L’esplosione non è simulata con forze fisiche ma semplicemente scalando la posizione originale nel vertex shader.
+Il parametro chiave è u_progress, animato da 0 a 1 tramite GSAP:
+
+    -nei primi istanti le particelle si espandono rapidamente,
+    -la crescita viene limitata da u_maxExplosionSize,
+    -l’easing rallenta il movimento verso la fine dell’espansione.
+
+La caduta viene simulata sottraendo progressivamente valore alla componente y,
+usando una funzione di easing diversa per separare il comportamento verticale da quello radiale.
+
+La dimensione dei punti è calcolata nel vertex shader:
+
+    -ogni particella ha un moltiplicatore casuale a_sizeMultiplier,
+    -la dimensione cresce e poi diminuisce nel tempo,
+    -viene aggiunto uno sfarfallio con una funzione seno,
+    -la scala è adattata alla risoluzione e alla distanza dalla camera.
+
+Nel fragment shader la texture della particella definisce la forma tramite il canale rosso usato come alpha.
+Il colore è random per ogni fuoco ed è passato come uniform.
+
+Il materiale è trasparente, con depthWrite disattivato e additive blending,
+così le particelle si sommano tra loro aumentando la luminosità nelle zone sovrapposte.
+
+Ogni sistema viene rimosso dalla scena e le risorse vengono liberate a fine animazione,
+evitando accumulo di geometrie e materiali in memoria.

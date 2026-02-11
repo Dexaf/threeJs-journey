@@ -1,0 +1,7 @@
+al di la dell effetto di per se, lo scopo della lezione era capire come manovrare
+i le uv dello schermo.
+l'idea e' che abbiamo accesso alla posizione del frammento nello schermo, 
+intendendo lo schermo come un diagramma cartesiano che va da 0 alla risoluzione - 1.
+
+dividendo la posizione del frammento per l'altezza della risoluzione otteniamo la posizione
+da 0 ad 1 sia per la x che per la y del frammento in riferimento allo schermo

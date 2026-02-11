@@ -1,0 +1,18 @@
+per questa lezione non ho scritto il codice perche' mi pesava il culo 
+fare 1 ora di lezione per un concetto solo.
+
+di base qua prova ad illuminare il mare che avevamo creato distorcendo i 
+vertici di un piano, il problema e' che le normali del piano rimangono perpendicolari
+e quindi puntano sempre verso l'alto, questo fa si che l'illuminazione, calcolata
+con il riflesso sulle normali, non da il risultato atteso.
+
+per risolvere questo problema dobbiamo calcolare la normale alterata, per farlo
+
+1)  prendiamo l'elevazione attuale del vertice
+2)  calcoliamo l'altezza dei vertici vicini
+    (ci muoviamo a L andando su vertice attuale con X spostata di poco
+    e vertice attuale con Z sposta di poco)
+3)  calcoliamo la direzione dal vertice attuale a quella dei due vicini
+4)  le due direzioni rappresentano la pendenza approssimata, possiamo dunque
+    usare il cross product per avere la nuova normale dato che questo 
+    ci restituisce un vettore perpendicolare alle due pendenze
