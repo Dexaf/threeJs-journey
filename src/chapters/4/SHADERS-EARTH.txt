@@ -1,0 +1,45 @@
+Questo shader della Terra è costruito su una ShaderMaterial custom che usa 
+tre texture principali: day, night e specularClouds, tutte in sRGB e con anisotropy 
+per migliorare la resa sulle superfici curve della sfera.
+
+La scena ha una sfera principale (raggio 1) per la Terra e 
+una leggermente più grande (1.025) per l’atmosfera, 
+così da creare un guscio esterno trasparente.
+
+Nel vertex shader vengono passati al fragment shader le uv, 
+la normale trasformata in model space e la posizione del frammento nello spazio mondo. 
+Questo permette di calcolare illuminazione, fresnel e specular direttamente nel fragment.
+
+La direzione del sole è controllata tramite un vettore u_sunPosition aggiornato con coordinate sferiche 
+e modificabile via GUI. 
+La luce sulla Terra è calcolata con il dot tra normale e direzione del sole, 
+poi rimappata con smoothstep per ottenere una transizione morbida giorno/notte.
+
+Il colore finale della superficie è un mix tra texture_night e texture_day in base a lightningOnEarth. 
+In questo modo le luci notturne emergono solo nella parte in ombra.
+Le nuvole vengono lette dal canale verde della texture specularClouds. 
+Vengono filtrate con smoothstep per mantenere solo le masse più dense e 
+colorate diversamente tra giorno e notte.
+
+L’atmosfera sulla Terra è simulata con un effetto fresnel: 
+si usa il dot tra normale e viewDirection per enfatizzare i bordi del pianeta. 
+Questo contributo è visibile solo sul lato illuminato moltiplicandolo per lightningOnEarth.
+
+La componente speculare del sole è calcolata con reflect e una potenza alta (pow 20) per 
+avere un highlight concentrato. 
+Viene limitata e modulata con una maschera di riflettività presa dal canale rosso della texture 
+(mare più riflettente del suolo).
+
+C'e' un mix tra specular e colore dell’atmosfera quando le due zone coincidono, 
+così l’highlight si fonde con il glow atmosferico.
+
+Lo shader dell’atmosfera riusa gran parte della logica (luce, fresnel, specular) 
+ma lavora solo sul colore atmosferico e sull’alpha. 
+depthWrite è disattivato e il materiale è trasparente per permettere il blending corretto.
+
+L’alpha finale è dato da fresnel + contributo speculare, 
+quindi l’atmosfera è più visibile ai bordi e nei punti colpiti dal sole.
+
+Nel complesso il risultato combina day/night blending, fresnel atmosferico e 
+specular controllato da maschera per ottenere un pianeta 
+credibile con transizione morbida e glow realistico.
