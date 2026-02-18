@@ -80,7 +80,6 @@ if (sceneHtmlCanvas) {
     window.addEventListener('pointermove', (p) => {
         mousePosition.x = p.clientX / window.innerWidth - 0.5
         mousePosition.y = p.clientY / window.innerHeight - 0.5
-
     })
 
     //LISTENERS
