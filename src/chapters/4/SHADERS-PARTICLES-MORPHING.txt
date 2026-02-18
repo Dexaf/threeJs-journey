@@ -1,0 +1,91 @@
+stiamo usando Points + ShaderMaterial,
+quindi ogni vertice diventa una particella.
+
+abbiamo due attributi:
+
+    position → posizione attuale
+    a_PositionTarget → posizione di destinazione
+
+la morph avviene nel vertex shader,
+interpolando tra queste due posizioni con u_progress.
+
+
+idea generale della morph
+non vogliamo che tutti i punti si muovano insieme.
+vogliamo:
+
+    alcuni punti fermi all’inizio
+    alcuni che partono dopo
+    alcuni che arrivano prima
+    altri che arrivano alla fine
+
+così si leggono meglio le forme.
+per fare questo usiamo il noise per creare un delay per ogni punto.
+
+[parte chiave: noise]
+    float noiseOrigin = simplexNoise3d(position * 0.2);
+    float noiseTarget = simplexNoise3d(a_PositionTarget * 0.2);
+    float noise = mix(noiseOrigin, noiseTarget, u_progress);
+    noise = smoothstep(-1., 1., noise);
+
+cosa succede:
+
+    calcoliamo un valore noise per la posizione iniziale
+    calcoliamo un valore noise per la posizione target
+    li interpoliamo con u_progress
+
+quindi mentre la morph avanza,
+anche il pattern del noise evolve.
+
+poi lo rimappiamo con:
+
+    smoothstep(-1., 1., noise);
+
+così otteniamo un valore tra 0 e 1.
+ora ogni punto ha un valore casuale stabile tra 0 e 1.
+questo valore lo usiamo come “firma temporale” del punto.
+
+[randomizzazione dell’inizio]
+
+    float duration = 0.4;
+    float delay = (1.0 - duration) * noise;
+    float end = delay + duration;
+    float progress = smoothstep(delay, end, u_progress);
+
+[duration]
+    quanto dura il movimento di ogni singolo punto.
+    qui 0.4 → il 40% del tempo totale.
+
+[delay]
+
+    delay = (1.0 - duration) * noise;
+siccome noise è tra 0 e 1:
+    se noise = 0 → delay = 0
+    se noise = 1 → delay = 0.6
+quindi ogni punto inizia in un momento diverso
+tra 0 e 0.6 del tempo totale.
+
+[end]
+    
+    end = delay + duration;
+se duration = 0.4:
+    punto con delay 0 → finisce a 0.4
+    punto con delay 0.6 → finisce a 1.0
+
+quindi tutti finiscono entro 1.0.
+
+[progress finale per punto]
+    
+    progress = smoothstep(delay, end, u_progress);
+
+smoothstep(a, b, x) restituisce:
+    0 se x < a
+    1 se x > b
+
+interpolazione morbida tra a e b quindi:
+
+    prima del delay → punto fermo
+    tra delay e end → si muove
+    dopo end → è arrivato
+
+ogni punto usa una finestra temporale diversa.

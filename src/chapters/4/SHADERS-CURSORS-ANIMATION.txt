@@ -1,0 +1,83 @@
+qui l’idea era semplice:
+
+voglio prendere un’immagine 2D
+trasformarla in un insieme di particelle
+e farla reagire al mouse deformandosi in profondità.
+
+per farlo usiamo:
+
+    un PlaneGeometry trasformato in Points
+    un immagine usata come texture del piano di punti
+    una CanvasTexture usata come mappa di displacement
+    uno shader custom per controllare tutto.
+
+prendiamo un PlaneGeometry molto suddiviso (ex: 128x128)
+e lo trasformiamo in THREE.Points.
+ogni vertice del piano diventa una particella.
+
+le uv del piano ci servono ad
+
+    trovare il colore del punto sulla texture colore
+    associare la texture di displacement ai punti spostati
+
+la texture decide il colore del punto
+l’alpha della texture decide la dimensione del punto
+
+    le zone bianche → punti più grandi
+    le zone scure → punti piccoli
+
+
+creiamo un canvas 2D nero
+e lo trasformiamo in THREE.CanvasTexture 
+per poi passarlo come uniform allo shader.
+
+quando muoviamo il mouse:
+
+facciamo un raycast su un piano invisibile grande come il
+piano immagine (e posto nella stessa posizione):
+
+    recuperiamo le UV del punto colpito
+    disegniamo un glow bianco nel canvas in quella posizione
+
+    ogni frame il canvas viene leggermente ripulito (con un fill nero semi-trasparente)
+    così il segno svanisce nel tempo in fade out.
+
+alla fine di ogni frame:
+
+    displacement.texture.needsUpdate = true
+
+quello che vediamo nel canvas
+diventa texture leggibile nello shader.
+
+
+nel vertex shader:
+
+    vec4 l_displacementTexture = texture(u_displacementTexture, uv);
+    float displacement = l_displacementTexture.r;
+    displacement = smoothstep(0.1, 0.3, displacement);
+    l_position.z += displacement * 3. * a_intensity;
+
+ogni punto:
+
+    legge il valore rosso della displacement texture
+    lo rimappa con smoothstep (bordo morbido)
+    si sposta lungo l’asse z
+    a_intensity serve per non far muovere tutti i punti uguali,
+    aggiunge variazione casuale.
+
+quindi:
+
+    dove il canvas è bianco → i punti si alzano
+    dove è nero → restano fermi
+
+
+dettagli visivi nel fragment shader
+
+i Points di default sono quadrati.
+nel fragment shader usiamo gl_PointCoord
+per trasformarli in cerchi:
+
+    float dist = length(vec2(.5) - gl_PointCoord);
+    if(dist > 0.5) discard;
+
+così ogni particella diventa un cerchio pulito.

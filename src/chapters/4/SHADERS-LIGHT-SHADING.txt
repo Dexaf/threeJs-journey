@@ -1,0 +1,51 @@
+usiamo ShaderMaterial,
+quindi niente luci di three, tutto scritto a mano in GLSL.
+
+passiamo delle uniform dal JS:
+
+    u_modelColor → colore base mesh
+    u_lightColor → colore luce direzionale
+    u_reflectionIntensity → controlla durezza specular
+    u_pointLightDistance → raggio massimo point light
+    u_time → pronto per animazioni
+
+le uniform sono valori globali condivisi tra cpu e gpu.
+
+[vertex shader]
+non deformiamo la geometria,
+facciamo solo la pipeline classica:
+
+    model → view → projection → gl_Position
+    passiamo al fragment:
+    v_position → posizione in world space
+    v_normal → normale trasformata con modelMatrix
+
+la normale la normalizziamo nel fragment
+perché l’interpolazione rompe la normalizzazione.
+
+[fragment shader]
+ricostruiamo un sistema luci custom:
+
+    ambient
+    directional
+    2 point light
+
+tutto basato su:
+
+    dot product per il diffuse
+    reflect + dot per lo specular
+    pow(specular, u_reflectionIntensity) per controllare l’highlight
+
+la point light ha un decay manuale:
+oltre una certa distanza la luce va a zero
+(usando u_pointLightDistance).
+Alla fine:
+sommiamo tutte le luci
+e moltiplichiamo per il colore del modello.
+
+includiamo tonemapping e colorspace
+per restare compatibili con il renderer.
+
+[idea chiave:]
+abbiamo riscritto a mano un mini sistema di illuminazione
+senza usare quello built-in di three.
