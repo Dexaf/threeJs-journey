@@ -1,0 +1,57 @@
+in questa unita' andiamo a sovrapporre un canvas sopra il renderer
+e gestire la posizione dei vari elementi html (in questo caso una label)
+usando una combinazione di css e 3D.
+
+per ogni oggetto grafico che vogliamo tracciare, ci segnamo una posizione 3D
+relativa che lo rappresenta nello schermo:
+
+    const points = [
+        {
+            position: new THREE.Vector3(1.55, 0.3, - 0.6),
+            element: document.querySelector('.point-0')
+        }
+    ]
+
+poi dentro il tick aggiorniamo le posizioni virtuali:
+
+    const tick = () =>
+    {
+        for(const point of points)
+        {
+            const screenPosition = point.position.clone()
+            screenPosition.project(camera)
+        }
+    }
+
+project ci consente di ottenere le coordinate 2D a schermo della posizione che gli passiamo
+rispetto alla camera che le visualizza.
+
+usiamo la project per ottenere dove dovrebbe essere quella posizione rispetto alla camera in quel momento,
+da li la convertiamo in coordinate 2D per aggiornare il css:
+
+    for(const point of points)
+    {
+        const screenPosition = point.position.clone()
+        //restituisce valori normalizzati tra -1 e +1
+        screenPosition.project(camera)
+
+        const translateX = screenPosition.x * sizes.width * 0.5
+        point.element.style.transform = `translateX(${translateX}px)`
+    }
+
+NOTE: questo modo non mi fa impazzire, praticamente tratta il centro come 0 e gli estremi
+come offset, ex: su un render largo 100px il centro e' 0 e gli estremi sono -+50.
+Sarebbe meglio avere valori da 0 a 100 come classico per il CSS:
+
+    const x = (screenPosition.x + 1) * 0.5 * sizes.width;
+
+con il metodo di prima lavoriamo con la translate del css, con questo con le posizioni assolute, conoscendo
+la larghezza del render possiamo lavorare in percentuali.
+
+
+Il metodo illustrato si replica per la Y tenendo da conto che il verso e' invertito tra CSS e threeJs.
+
+Per la gestione della comparsa della ui fa un raycast verso la posizione, se c'e' un intersezione allora 
+sappiamo che il punto e' coperto, da li decidiamo noi che farne (nasconderlo, farlo apparire/sparire o
+tenerlo in overlay).
+

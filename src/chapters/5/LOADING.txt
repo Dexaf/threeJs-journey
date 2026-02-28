@@ -1,0 +1,50 @@
+ogni loader puo prendere come parametro un istanza del loadingManager.
+questo a sua volta puo ricevere delle funzioni per il loading terminato
+di asset e per il progresso del loading.
+
+    const loadingManager = new THREE.LoadingManager()
+    const gltfLoader = new GLTFLoader(loadingManager)
+    const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager)
+
+    const loadingManager = new THREE.LoadingManager(
+        // Loaded
+        () =>
+        {
+            console.log('loaded')
+        },
+
+        // Progress
+        () =>
+        {
+            console.log('progress')
+        }
+    )
+
+NOTE: dal network possiamo simulare la velocita di download 
+anche di risorse locali
+
+Progress porta con se diversi dati, url degli asset, quanti sono stati
+caricati e il numero da caricare in totale.
+
+    const loadingManager = new THREE.LoadingManager(
+        // ...
+
+        // Progress
+        (itemUrl, itemsLoaded, itemsTotal) =>
+        {
+            console.log(itemUrl, itemsLoaded, itemsTotal)
+        }
+    )
+
+cosi possiamo simulare una barra di caricamento:
+
+    const loadingManager = new THREE.LoadingManager(
+        // ...
+
+        // Progress
+        (itemUrl, itemsLoaded, itemsTotal) =>
+        {
+            const progressRatio = itemsLoaded / itemsTotal
+            console.log(progressRatio)
+        }
+    )

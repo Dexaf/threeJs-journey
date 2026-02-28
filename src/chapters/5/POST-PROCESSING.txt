@@ -1,0 +1,100 @@
+Il post-processing in WebGL è il processo di applicare effetti sull’immagine finale renderizzata. 
+È molto usato nel cinema, ma in Three.js possiamo usarlo anche per ottenere effetti visivi molto vari, 
+dal leggero miglioramento dei colori a effetti spettacolari come bloom, motion blur, glitch, distorsioni o riflessi.
+
+Il principio fondamentale è che invece di renderizzare direttamente sul canvas, si rende in una texture chiamata render target. 
+Questa texture viene poi applicata su un piano che copre tutta la vista e su cui viene eseguito un fragment shader 
+che applica l’effetto desiderato. Ad esempio, per un effetto di colorazione rossa basta moltiplicare il canale rosso dei pixel in questo shader:
+
+vec4 color = texture2D(tDiffuse, vUv);
+color.r += 0.1;
+gl_FragColor = color;
+
+Ogni effetto è chiamato pass in Three.js. Quando vogliamo usare più pass in sequenza, 
+diventa necessario il concetto di ping-pong buffering: servono due render target che si scambiano ad ogni pass, 
+uno per leggere la texture precedente e uno per scrivere quella nuova. Solo l’ultimo pass viene renderizzato direttamente sul canvas, 
+in modo che l’utente veda il risultato finale.
+
+Per semplificare tutto questo, Three.js fornisce la classe EffectComposer, che gestisce automaticamente i render target, 
+il ping-pong tra i pass e la scrittura sul canvas. Per usarlo si crea un EffectComposer, 
+si aggiunge il primo pass di tipo RenderPass che renderizza la scena e poi si aggiungono gli altri pass desiderati. 
+In questo modo possiamo sostituire il normale renderer.render con effectComposer.render():
+
+const effectComposer = new EffectComposer(renderer);
+effectComposer.setSize(width, height);
+effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const renderPass = new RenderPass(scene, camera);
+effectComposer.addPass(renderPass);
+
+// nel loop di animazione
+effectComposer.render();
+
+Ci sono però alcuni problemi comuni da considerare. 
+Il primo riguarda i colori: quando si usa un render target, 
+renderer.outputColorSpace = THREE.SRGBColorSpace non funziona più, 
+quindi i colori possono apparire più scuri o sbilanciati. 
+La soluzione è aggiungere un GammaCorrectionPass come ultimo pass:
+
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js';
+
+const gammaPass = new ShaderPass(GammaCorrectionShader);
+effectComposer.addPass(gammaPass);
+
+Un altro problema è il ridimensionamento. 
+Se ridimensioniamo la finestra, l’immagine renderizzata può diventare sfocata o deformata. 
+Per risolvere, dobbiamo aggiornare le dimensioni e il pixel ratio dell’EffectComposer nel listener di window.resize:
+
+window.addEventListener('resize', () => {
+    effectComposer.setSize(sizes.width, sizes.height);
+    effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+
+L’antialiasing è un altro caso delicato. 
+Il render target usato da EffectComposer di default non supporta l’antialiasing hardware. 
+Possiamo tentare di abilitarlo con la proprietà samples di WebGLRenderTarget, ma funziona solo su WebGL2. 
+In alternativa, si possono usare pass di antialiasing software come FXAA o SMAA. 
+La soluzione migliore è combinare entrambe le tecniche:
+
+const renderTarget = new THREE.WebGLRenderTarget(800, 600, {
+    samples: renderer.getPixelRatio() === 1 ? 2 : 0
+});
+const effectComposer = new EffectComposer(renderer, renderTarget);
+
+// aggiunta SMAA se necessario
+if(renderer.getPixelRatio() === 1 && !renderer.capabilities.isWebGL2){
+    const smaaPass = new SMAAPass();
+    effectComposer.addPass(smaaPass);
+}
+
+Three.js offre anche pass già pronti come DotScreenPass, GlitchPass, RGBShiftShader e UnrealBloomPass. 
+Questi ultimi, come l’UnrealBloomPass, permettono di regolare parametri come forza, raggio e soglia del glow:
+
+const unrealBloomPass = new UnrealBloomPass();
+unrealBloomPass.strength = 1;
+unrealBloomPass.radius = 1;
+unrealBloomPass.threshold = 0.5;
+effectComposer.addPass(unrealBloomPass);
+
+Creare pass personalizzati è semplice: basta creare uno ShaderPass con i propri shader. 
+Lo shader contiene gli uniforms, il vertex shader (quasi sempre identico, per posizionare il piano) 
+e il fragment shader dove si applica l’effetto pixel per pixel. 
+Ad esempio, si può fare un tint rosso aggiungendo un valore ai canali colore 
+o distorcere la texture originale modificando le coordinate UV per creare un effetto onda animato:
+
+vec2 newUv = vec2(vUv.x, vUv.y + sin(vUv.x*10.0 + uTime)*0.1);
+vec4 color = texture2D(tDiffuse, newUv);
+gl_FragColor = color;
+
+È anche possibile usare texture esterne per ottenere effetti più complessi, come una distorsione basata su una normal map:
+
+vec3 normalColor = texture2D(uNormalMap, vUv).xyz * 2.0 - 1.0;
+vec2 newUv = vUv + normalColor.xy*0.1;
+vec4 color = texture2D(tDiffuse, newUv);
+
+In sintesi, il post-processing in Three.js funziona rendendo la scena in texture intermedie, 
+applicando shader in sequenza tramite pass, e gestendo il tutto con EffectComposer. 
+Ci sono alcune difficoltà legate a colore, antialiasing e resize, ma con pass dedicati 
+e attenzione al pixel ratio si possono risolvere facilmente. Creare effetti personalizzati 
+è flessibile e si riduce a programmare gli shader giusti e aggiornare uniforms per animazioni o interazioni.
