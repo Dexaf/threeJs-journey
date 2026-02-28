@@ -19,6 +19,7 @@
     "cannon": "^0.6.2",
     "gsap": "^3.14.2",
     "three": "^0.182.0",
+    "three-bvh-csg": "^0.0.16",
     "three-custom-shader-material": "6.3"
   }
 }
