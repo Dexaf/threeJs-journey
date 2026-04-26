@@ -1,0 +1,17 @@
+Quando esportiamo gltf, a priori, threejs applica materiale PBR.
+Questo comportamento potrebbe andarci bene ma se lavoriamo con
+scene a cui abbiamo fatto del baking, e' un problema.
+Dobbiamo quindi caricare la texture, creare un materiale nuovo 
+e assegnare questa come mappa per poi passare il materiale al gltf.
+
+per avere i colori giusti dobbiamo ricordarti ci cambiare il color space
+della texture:
+
+    bakedTexture.colorSpace = THREE.SRGBColorSpace
+
+ricordiamoci su blender di dare nomi univoci e significativi alle varie parti e di dividere
+in collezioni gli insiemi che ci servono separati, questo ci aiuta ad esempio 
+se dobbiamo applicare un materiale determinato ad alcuni oggetti.
+
+se sappiamo che alcuni oggetti non verranno mossi, conviene fare il merge su blender
+

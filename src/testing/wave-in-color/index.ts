@@ -1,16 +1,16 @@
-import { GLTFLoader, OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import '../../style.css'
 import * as THREE from 'three'
+import vertexShader from './vertex.glsl?raw';
+import fragmentShader from './fragment.glsl?raw';
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js';
-import vertexShader from './shaders/6/vertex.glsl?raw';
-import fragmentShader from './shaders/6/fragment.glsl?raw';
+import { Color } from 'three';
+import gsap from 'gsap';
 
 //SCENE HTML CANVAS
 const sceneHtmlCanvas = document.getElementById("three-scene-canvas") as HTMLCanvasElement;
 
 if (sceneHtmlCanvas) {
-    const gltfLoader = new GLTFLoader();
-
     //SCENE
     const scene = new THREE.Scene();
 
@@ -24,47 +24,58 @@ if (sceneHtmlCanvas) {
     camera.lookAt(scene.position);
     scene.add(camera);
 
-    //SECTION - MATERIAL
+    //MESH 
+    const geometry = new THREE.TorusKnotGeometry();
+    geometry.computeBoundingBox();
+    if (!geometry.boundingBox) throw new Error('bouding box not found');
+
+    const geometryBB = geometry.boundingBox;
+    const geometrySize = new THREE.Vector3();
+    geometryBB.getSize(geometrySize);
+
     const uniforms: { [uniform: string]: THREE.IUniform<any>; } = {
-        u_time: new THREE.Uniform(0),
-        u_stripesSpeedRatio: new THREE.Uniform(0.2),
-        u_stripesNumber: new THREE.Uniform(8),
-        u_fresnelIntensity: new THREE.Uniform(1.1),
-        u_glitchStrength: new THREE.Uniform(0.1),
-        u_glitchSpeed: new THREE.Uniform(1.5),
-    };
+        u_time: { value: 0 },
+        u_progress: { value: 0 },
+        u_screenSize: {
+            value: new THREE.Vector2(
+                sceneHtmlCanvas.clientWidth,
+                sceneHtmlCanvas.clientHeight
+            )
+        },
+        u_size: {
+            value: new THREE.Vector2(
+                geometrySize.x,
+                geometrySize.y
+            )
+        },
+        u_currentColor: { value: new Color('#3861ff') },
+        u_targetColor: { value: new Color('#02fd91') },
+    }
+    const gui = new GUI();
+    gui.add(uniforms.u_progress, 'value', 0, 1, 0.01);
 
-    const hologramMaterial = new THREE.ShaderMaterial({
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        transparent: true,
-        uniforms: uniforms,
-        side: THREE.DoubleSide,
-        //with transparency on and double side we need to 
-        //stop the front side to occlude the backside 
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
+    const tl = gsap.timeline({ paused: true });
+    tl.to(uniforms.u_progress, {
+        value: 1,
+        ease: 'sine.inOut',
+        duration: 3
     });
-    //!SECTION - MATERIAL
+    const animationDuration = tl.duration();
+    let animationElapsed = 0;
 
-    //SECTION - SUZANNE
-    const suzanneGltf = await gltfLoader.loadAsync('/assets/3d-models/Suzanne/suzanne.glb');
-    (suzanneGltf.scene.children[0] as THREE.Mesh).material = hologramMaterial;
-    scene.add(suzanneGltf.scene);
-    //!SECTION - SUZANNE
+    const material = new THREE.RawShaderMaterial(
+        {
+            uniforms: uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+        }
+    );
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
 
     //CONTROLS
     const controls = new OrbitControls(camera, sceneHtmlCanvas)
     controls.enableDamping = true;
-
-    //SECTION - GUI
-    const gui = new GUI();
-    gui.add(uniforms.u_stripesSpeedRatio, 'value', -10, 10, 0.05).name('stripes speed ratio');
-    gui.add(uniforms.u_stripesNumber, 'value', 1, 30, 1).name('stripes number');
-    gui.add(uniforms.u_fresnelIntensity, 'value', 0, 5, 0.1).name('fresnel intensity');
-    gui.add(uniforms.u_glitchStrength, 'value', 0, 2, 0.05).name('glitch strength');
-    gui.add(uniforms.u_glitchSpeed, 'value', 0, 10, 0.1).name('glitch speed');
-    //!SECTION - GUI
 
     //RENDERER
     const renderer = new THREE.WebGLRenderer({
@@ -73,7 +84,6 @@ if (sceneHtmlCanvas) {
     renderer.setSize(sceneHtmlCanvas.clientWidth, sceneHtmlCanvas.clientHeight);
     //render e' come se facesse uno screenshot della scena 3D attiva
     renderer.render(scene, camera);
-    renderer.setClearColor(new THREE.Color('#29283b'))
 
     //RESIZING CANVAS AND CAMERA
     window.addEventListener('resize', () => {
@@ -84,18 +94,28 @@ if (sceneHtmlCanvas) {
     })
 
     //RENDERING
-    //NOTE: function to handle animations
-    const runLogic = (_: number) => {
+    const runLogic = (deltaTime: number) => {
         uniforms.u_time.value = timer.getElapsed();
+        if (animationElapsed <= animationDuration)
+            animationElapsed += deltaTime;
+        else {
+            animationElapsed = 0;
+            uniforms.u_progress.value = 0;
+            const a = uniforms.u_currentColor.value;
+            uniforms.u_currentColor.value = uniforms.u_targetColor.value;
+            uniforms.u_targetColor.value = a;
+        }
     }
 
-    const runAnimations = (deltaTime: number) => {
-        // suzanneGltf.scene.rotateY(DEGREE_22_5 * deltaTime);
+    //NOTE: function to handle animations
+    const runAnimations = (_: number) => {
+        if (animationElapsed <= animationDuration)
+            tl.time(animationElapsed);
     }
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
 
-    const fps = 60;
+    const fps = 120;
     let lastRenderTime = 0;
     const timer = new THREE.Timer();
     const timeBetweenFrames = 1000 / fps;
