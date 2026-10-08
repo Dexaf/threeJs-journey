@@ -12,6 +12,8 @@ import { createTardon } from './objects/create-tardon';
 import { createAllTardons } from './objects/create-all-tardons';
 import { createBrachioslug } from './objects/create-brachioslug';
 import { createAllBrachioslugs } from './objects/create-all-brachioslugs';
+import { createGrass, placeGrassInstances } from './objects/create-grass';
+import { createGrassMaterial } from './shaders/create-grass-material';
 
 //SCENE HTML CANVAS
 const sceneHtmlCanvas = document.getElementById("three-scene-canvas") as HTMLCanvasElement;
@@ -30,14 +32,13 @@ if (sceneHtmlCanvas) {
     camera.far = 50;
     //serve per aggiornare la proj matrix usata negli shader
     camera.updateProjectionMatrix();
-    camera.position.set(0, 1, -5);
+    camera.position.set(0, 1, -2.2);
     scene.add(camera);
 
     //RENDERER
     const renderer = new WebGPURenderer({
         canvas: sceneHtmlCanvas,
-        antialias: false,
-        forceWebGL: true
+        antialias: false
     })
     renderer.setSize(sceneHtmlCanvas.clientWidth, sceneHtmlCanvas.clientHeight);
 
@@ -140,6 +141,30 @@ if (sceneHtmlCanvas) {
     const brachioslugActors = createAllBrachioslugs(brachioslugGltf)
     brachioslugActors.forEach(actor => scene.add(actor.root));
     //!SECTION - ANIMALS
+
+    //SECTION - LEAVES
+    const grassMaterial = await createGrassMaterial();
+    const grass = await createGrass();
+    let grassGeometry: THREE.BufferGeometry | undefined;
+    grass.traverse(child => {
+        if (!grassGeometry && child instanceof THREE.Mesh) {
+            grassGeometry = child.geometry;
+            grassGeometry!.scale(0.1, 0.1, 0.1)
+        }
+    });
+    const grassInstances = new THREE.InstancedMesh(
+        grassGeometry,
+        grassMaterial, 
+        50
+    );
+    placeGrassInstances(
+        grassInstances,
+        new THREE.Vector3(0, 0.2, -1.5),
+        0.98,
+        0.3
+    );
+    scene.add(grassInstances);
+    //!SECTION - LEAVES
 
     const sun = new THREE.DirectionalLight('white', 3);
     sun.position.set(-2, 1, -1);
