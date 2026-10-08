@@ -16,9 +16,6 @@ import {
     sin,
     uv,
     texture,
-    screenUV,
-    viewportSharedTexture,
-    vec2,
 } from 'three/tsl';
 
 const FOAM_IN_SHALLOWNESS_CUT = 0.6;
@@ -33,7 +30,8 @@ export async function createSeaMaterial(renderer: WebGPURenderer): Promise<MeshS
         transparent: true,
         roughness: 0.5
     });
-    material.depthWrite = true;
+    material.depthTest = true;
+    material.depthWrite = false;
 
     await renderer.init();
 
@@ -92,23 +90,7 @@ export async function createSeaMaterial(renderer: WebGPURenderer): Promise<MeshS
         wavesColor
     );
 
-    const distortionColor = viewportSharedTexture(
-        screenUV.add(
-            vec2(
-                sin(
-                    //move time from deepness to shallowness
-                    time.mul(-1).add(uv().y.mul(50))
-                ).mul(0.001),
-                sin(
-                    //move time from deepness to shallowness
-                    time.mul(3).add(uv().y.mul(100))
-                ).mul(0.001)
-            )
-        )
-    ).b;
-    material.colorNode = material.colorNode.mul(distortionColor);
     //!SECTION - COLORS
-
     //bump sea with noise
     material.positionNode = positionLocal.add(
         normalLocal.mul(

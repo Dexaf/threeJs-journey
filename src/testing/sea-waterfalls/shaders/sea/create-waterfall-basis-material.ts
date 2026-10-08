@@ -14,7 +14,8 @@ export async function createWaterfallBasisMaterial(renderer: WebGPURenderer): Pr
         transparent: true,
         side: FrontSide
     });
-    material.depthTest = false;
+    material.depthTest = true;
+    material.depthWrite = false;
 
     await renderer.init();
 

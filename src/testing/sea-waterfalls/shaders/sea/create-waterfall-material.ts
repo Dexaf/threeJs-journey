@@ -1,4 +1,4 @@
-import { color, mul, normalLocal, PI, positionLocal, screenUV, sin, sub, texture, time, uv, vec2, viewportSharedTexture } from "three/tsl";
+import { color, float, mul, normalLocal, PI, positionLocal, screenUV, sin, sub, texture, time, uv, vec2, vec4, viewportSharedTexture } from "three/tsl";
 import {
     DoubleSide,
     MeshStandardNodeMaterial,
@@ -32,7 +32,7 @@ export async function createWaterfallMaterial(renderer: WebGPURenderer): Promise
         uvX,
         uvY,
     );
-    const noiseTxtSample = texture(noiseTxt, shiftedUv).pow(0.5);
+    const noiseTxtSample = texture(noiseTxt, shiftedUv).pow(vec4(0.5));
 
     const denseWaterColor = color("#1e7cee");
     const normalWaterColor = color("#2fafff");
@@ -113,6 +113,8 @@ export async function createWaterfallMaterialV2(renderer: WebGPURenderer): Promi
         side: DoubleSide,
         roughness: 0.7
     });
+    material.depthTest = true;
+    material.depthWrite = false;
 
     await renderer.init();
 
@@ -130,7 +132,7 @@ export async function createWaterfallMaterialV2(renderer: WebGPURenderer): Promi
         uvX,
         uvY,
     );
-    const noiseTxtSample = texture(noiseTxt, shiftedUv).pow(0.5);
+    const noiseTxtSample = texture(noiseTxt, shiftedUv).pow(vec4(0.5));
 
     const denseWaterColor = color("#1e7cee");
     const normalWaterColor = color("#2fafff");

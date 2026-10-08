@@ -3,7 +3,6 @@ import '../../style.css'
 import * as THREE from 'three'
 import Stats from "stats.js";
 import { PMREMGenerator, WebGPURenderer } from 'three/webgpu';
-import { DEGREE_90 } from '../../constants/ANGLES';
 import { createSeaMaterial } from './shaders/sea/create-sea-material';
 import { createWaterfallMaterialV2 } from './shaders/sea/create-waterfall-material';
 import { createWaterfallBasisMaterial } from './shaders/sea/create-waterfall-basis-material';
@@ -29,13 +28,16 @@ if (sceneHtmlCanvas) {
     );
     camera.near = 0.1;
     camera.far = 50;
+    //serve per aggiornare la proj matrix usata negli shader
+    camera.updateProjectionMatrix();
     camera.position.set(0, 1, -5);
     scene.add(camera);
 
     //RENDERER
     const renderer = new WebGPURenderer({
         canvas: sceneHtmlCanvas,
-        antialias: true
+        antialias: false,
+        forceWebGL: true
     })
     renderer.setSize(sceneHtmlCanvas.clientWidth, sceneHtmlCanvas.clientHeight);
 
@@ -101,7 +103,6 @@ if (sceneHtmlCanvas) {
             obj.material.needsUpdate = true;
         }
     })
-    const obj = gltf.scene;
     scene.add(gltf.scene)
     //!SECTION - MESH 
 
@@ -179,6 +180,9 @@ if (sceneHtmlCanvas) {
 
     const timer = new THREE.Timer();
     const stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
+
     const animate = () => {
         stats.begin();
         timer.update();
