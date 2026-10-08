@@ -62,9 +62,9 @@ void main() {
     float noise = getNoise(v_uv * 10. + u_time);
     vec2 rotatedPos = rotatePos(v_localPosNormalized, DEG45);
 
-    float monoWave = cos(rotatedPos.y * PI * 2. + 2.) * 0.1;
-    float pentaWave = cos(rotatedPos.y * PI * 10. + 2.) * 0.1;
-    float finalWave = 8. * (monoWave * pentaWave);
+    float monoWave = cos(rotatedPos.y * PI * 4. + 2.) * 0.1;
+    float subWaves = cos(rotatedPos.y * PI * 20. + 2.) * 0.1;
+    float finalWave = 5. * (monoWave * subWaves);
 
     float finalProgress = 
         // move horizontally with time

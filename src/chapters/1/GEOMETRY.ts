@@ -25,12 +25,13 @@ if (sceneHtmlCanvas) {
     const material = new THREE.MeshBasicMaterial({ color: 'red', wireframe: true });
     //MESH     - 3D OBJECT
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.rotateY(Math.PI * 0.5);
     scene.add(mesh);
 
     //Senza una camera non vediamo niente, ergo dobbiamo crearne una
     //adattarla al wrapper o tenerla fissa (nel aspect ratio)
     //e aggiungerla alla scena
-    const wrapperAspectRatio = sceneHtmlCanvas.clientWidth / sceneHtmlCanvas.clientHeight;
+    const wrapperAspectRatio = 2.666;
     const camera = new THREE.PerspectiveCamera(
         45,                 // FOV - FIELD OF VIEW
         wrapperAspectRatio  // ASPECT RATIO
@@ -40,7 +41,8 @@ if (sceneHtmlCanvas) {
     //quindi al momento la telecamera non vede niente perche'
     //e' dentro il cubo creato.
     //spostiamo la camera e la giriamo (lookAt) verso il nostro cubo
-    camera.position.set(-5, 0, 0);
+    const distance = -5;
+    camera.position.set(0, 0, distance);
     camera.lookAt(scene.position);
     scene.add(camera);
 
@@ -54,12 +56,17 @@ if (sceneHtmlCanvas) {
     //render e' come se facesse uno screenshot della scena 3D attiva
     renderer.render(scene, camera);
 
+
     //RESIZING CANVAS AND CAMERA
     window.addEventListener('resize', () => {
-        camera.aspect = sceneHtmlCanvas.clientWidth / sceneHtmlCanvas.clientHeight;
+        //this routine allows us to maintain the original distance if the canvas gets a smaller ar and maintain the original view if it gets bigger
+        const newAspect = sceneHtmlCanvas.clientWidth / sceneHtmlCanvas.clientHeight;
+        const aspectRatio = newAspect / wrapperAspectRatio;
+        camera.position.z = Math.max((2 - aspectRatio), 1) * distance;
+        camera.aspect = newAspect;
         camera.updateProjectionMatrix();
 
-        renderer.setSize(sceneHtmlCanvas.clientWidth, sceneHtmlCanvas.clientHeight);
+        renderer.setSize(sceneHtmlCanvas.clientWidth, sceneHtmlCanvas.clientHeight, true);
     })
 
     //RENDERING
@@ -74,7 +81,7 @@ if (sceneHtmlCanvas) {
     //come quello qua sotto per assicurarci di avere un dpr non superiore a 3
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
 
-    const fps = 60;
+    const fps = 120;
     let lastRenderTime = 0;
     const clock = new THREE.Clock();
     const timeBetweenFrames = 1000 / fps;

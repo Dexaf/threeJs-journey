@@ -36,7 +36,7 @@ void main() {
     float falloff = smoothstep(0.8, 0.0, fresnel);
     holographic *= falloff;
     vec4 stripeColor = vec4(vec3(0.0, 1.0, 1.0), holographic);
-    gl_FragColor = vec4(stripeColor);
+    gl_FragColor = vec4(vec3(1., 0., 0.), stripeColor.a);
 
     #include <tonemapping_fragment>
     #include <colorspace_fragment>

@@ -1,0 +1,18 @@
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+uniform float u_time;
+
+attribute vec3 position;
+attribute vec2 uv;
+
+varying vec2 v_uv; 
+
+void main() {
+    vec3 l_position = position;
+    vec4 modelPosition = modelMatrix * vec4(l_position, 1.0);
+    vec4 viewPosition = viewMatrix * modelPosition;
+    vec4 projPosition = projectionMatrix * viewPosition;
+    gl_Position = projPosition;
+    v_uv = uv;
+}

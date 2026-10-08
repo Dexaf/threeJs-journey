@@ -25,7 +25,7 @@ if (sceneHtmlCanvas) {
     scene.add(camera);
 
     //MESH 
-    const geometry = new THREE.TorusKnotGeometry();
+    const geometry = new THREE.BoxGeometry();
     geometry.computeBoundingBox();
     if (!geometry.boundingBox) throw new Error('bouding box not found');
 
@@ -35,7 +35,7 @@ if (sceneHtmlCanvas) {
 
     const uniforms: { [uniform: string]: THREE.IUniform<any>; } = {
         u_time: { value: 0 },
-        u_progress: { value: 0 },
+        u_progress: { value: 0.5 },
         u_screenSize: {
             value: new THREE.Vector2(
                 sceneHtmlCanvas.clientWidth,
@@ -55,11 +55,11 @@ if (sceneHtmlCanvas) {
     gui.add(uniforms.u_progress, 'value', 0, 1, 0.01);
 
     const tl = gsap.timeline({ paused: true });
-    tl.to(uniforms.u_progress, {
-        value: 1,
-        ease: 'sine.inOut',
-        duration: 3
-    });
+    // tl.to(uniforms.u_progress, {
+    //     value: 1,
+    //     ease: 'sine.inOut',
+    //     duration: 3
+    // });
     const animationDuration = tl.duration();
     let animationElapsed = 0;
 
@@ -96,15 +96,15 @@ if (sceneHtmlCanvas) {
     //RENDERING
     const runLogic = (deltaTime: number) => {
         uniforms.u_time.value = timer.getElapsed();
-        if (animationElapsed <= animationDuration)
-            animationElapsed += deltaTime;
-        else {
-            animationElapsed = 0;
-            uniforms.u_progress.value = 0;
-            const a = uniforms.u_currentColor.value;
-            uniforms.u_currentColor.value = uniforms.u_targetColor.value;
-            uniforms.u_targetColor.value = a;
-        }
+        // if (animationElapsed <= animationDuration)
+        //     animationElapsed += deltaTime;
+        // else {
+        //     animationElapsed = 0;
+        //     uniforms.u_progress.value = 0;
+        //     const a = uniforms.u_currentColor.value;
+        //     uniforms.u_currentColor.value = uniforms.u_targetColor.value;
+        //     uniforms.u_targetColor.value = a;
+        // }
     }
 
     //NOTE: function to handle animations
