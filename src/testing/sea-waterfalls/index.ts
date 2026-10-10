@@ -32,7 +32,7 @@ if (sceneHtmlCanvas) {
     camera.far = 50;
     //serve per aggiornare la proj matrix usata negli shader
     camera.updateProjectionMatrix();
-    camera.position.set(0, 1, -2.2);
+    camera.position.set(0, 0, -5);
     scene.add(camera);
 
     //RENDERER
@@ -54,6 +54,9 @@ if (sceneHtmlCanvas) {
         renderer.init().then(() => {
             const pmrem = new PMREMGenerator(renderer);
             const env = pmrem.fromEquirectangular(hdr).texture;
+            scene.environmentRotation = new THREE.Euler(0, 160, 0);
+            scene.environmentIntensity = 0.5;
+            scene.backgroundRotation = new THREE.Euler(0, 160, 0);
             scene.environment = env; // filtrata, corretta per IBL
             scene.background = hdr;  // originale, più nitida
         })
@@ -154,7 +157,7 @@ if (sceneHtmlCanvas) {
     });
     const grassInstances = new THREE.InstancedMesh(
         grassGeometry,
-        grassMaterial, 
+        grassMaterial,
         50
     );
     placeGrassInstances(
@@ -166,10 +169,10 @@ if (sceneHtmlCanvas) {
     scene.add(grassInstances);
     //!SECTION - LEAVES
 
-    const sun = new THREE.DirectionalLight('white', 3);
-    sun.position.set(-2, 1, -1);
+    const sun = new THREE.DirectionalLight('white', 2);
+    sun.position.set(-2, 1, -1.5)
     scene.add(sun)
-    const aLight = new THREE.AmbientLight('white', 1);
+    const aLight = new THREE.AmbientLight('white', 1.5);
     scene.add(aLight)
 
     //CONTROLS
