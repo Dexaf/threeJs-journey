@@ -27,11 +27,11 @@ if (sceneHtmlCanvas) {
     //SECTION - MATERIAL
     const uniforms: { [uniform: string]: THREE.IUniform<any>; } = {
         u_time: new THREE.Uniform(0),
-        u_stripesSpeedRatio: new THREE.Uniform(0.2),
+        u_stripesSpeedRatio: new THREE.Uniform(0.1),
         u_stripesNumber: new THREE.Uniform(8),
         u_fresnelIntensity: new THREE.Uniform(1.1),
         u_glitchStrength: new THREE.Uniform(0.1),
-        u_glitchSpeed: new THREE.Uniform(1.5),
+        u_glitchSpeed: new THREE.Uniform(0),
     };
 
     const hologramMaterial = new THREE.ShaderMaterial({
@@ -48,9 +48,23 @@ if (sceneHtmlCanvas) {
     //!SECTION - MATERIAL
 
     //SECTION - SUZANNE
-    const suzanneGltf = await gltfLoader.loadAsync('/assets/3d-models/Suzanne/suzanne.glb');
-    (suzanneGltf.scene.children[0] as THREE.Mesh).material = hologramMaterial;
-    scene.add(suzanneGltf.scene);
+    const gltf = await gltfLoader.loadAsync('/assets/3d-models/planet-what/sm_planet_what_lod0.gltf');
+    (gltf.scene.children[0] as THREE.Mesh).material = hologramMaterial;
+
+    gltf.scene.traverse(obj => {
+        if (obj instanceof THREE.Mesh) {
+            console.log(obj.material.name);
+            switch (obj.material.name) {
+                case "m_hologram":
+                    obj.material = hologramMaterial;
+                    break;
+                default:
+                    break;
+            }
+            obj.material.needsUpdate = true;
+        }
+    })
+    scene.add(gltf.scene);
     //!SECTION - SUZANNE
 
     //CONTROLS
