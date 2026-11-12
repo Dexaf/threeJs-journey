@@ -5,7 +5,7 @@ import Stats from "stats.js";
 import { InstancedBufferAttribute, WebGPURenderer } from 'three/webgpu';
 import { createHoloMaterial } from './shaders/create-holo-material';
 import { createCoreMaterial } from './shaders/create-core-material';
-import { createHoloFirefliesParticlesSystemSimulator, HoloFireParticle } from './particles-system/create-holo-fireflies.particles-system-simulator';
+import { createHoloFirefliesParticlesSystemSimulator } from './particles-system/create-holo-fireflies.particles-system-simulator';
 import { createParticleHoloMaterial } from './particles-system/materials/create-particle-holo-material';
 
 //SCENE HTML CANVAS
